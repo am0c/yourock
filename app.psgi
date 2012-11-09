@@ -14,19 +14,19 @@ my $SERVICE_HOME = '/home/apps/apps';
 my $DOMAIN = 'http://%s.micro.jjang.info';
 my %HOOK;
 
-sub on {
+helper on => sub {
     my ($name, $callback) = @_;
     push @{ $HOOK{$name} ||= [] }, $callback;
-}
+};
 
-sub emit {
-    my ($name, @args) = @_;
+helper emit => sub {
+    my ($self, $name, @args) = @_;
     if ($HOOK{$name}) {
         for my $hook (@{ $HOOK{$name} }) {
             $hook->(@args);
         }
     }
-}
+};
 
 sub del_service {
     my $digest = shift;
@@ -38,14 +38,14 @@ sub del_service {
     chdir $dir;
 }
 
-on(
+app->on(
     'pull',
     sub {
         my ($uri, $digest) = @_;
     }
 );
 
-on(
+app->on(
     'clone',
     sub {
         my ($uri, $digest) = @_;
@@ -93,12 +93,12 @@ post '/' => sub {
         chdir "$SERVICE_HOME/gits";
         if (-d $digest) {
             if (!system("git pull")) {
-                emit('pull', $repo, $digest);
+                $self->emit('pull', $repo, $digest);
             }
         } else {
             if (!system("git clone $repo $digest")) {
                 if (-d "$digest/public" && -f "$digest/app.psgi") {
-                    emit('clone', $repo, $digest);
+                    $self->emit('clone', $repo, $digest);
                 } else {
                     rmtree("$digest");
                     $self->render('error');
