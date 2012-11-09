@@ -10,8 +10,7 @@ use Directory::Queue::Simple;
 # Documentation browser under "/perldoc"
 plugin 'PODRenderer';
 
-my $SERVICE_HOME = '/home/hshong/Desktop'; # will be changed
-# my $SERVICE_HOME = '/home/apps/apps';
+my $SERVICE_HOME = '/home/apps/apps';
 my $DOMAIN = 'http://%s.micro.jjang.info';
 my %HOOK;
 
