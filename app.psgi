@@ -148,8 +148,8 @@ __DATA__
 
 @@ index.html.ep
 % layout 'default';
-% title 'Welcome uroku';
-<h1>uroku</h1>
+% title 'Welcome yourock';
+<h1>yourock</h1>
 
 <form method="post" enctype="application/x-www-form-urlencoded" class="form-inline">
   <input type="text" name="repo" placeholder="git://github.com/<user>/<repo>.git"/>
