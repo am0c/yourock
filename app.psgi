@@ -36,7 +36,7 @@ helper emit => sub {
     my ($self, $name, @args) = @_;
     if ($HOOK{$name}) {
         for my $hook (@{ $HOOK{$name} }) {
-            $hook->(@args);
+            $self->$hook(@args);
         }
     }
 };
@@ -54,7 +54,7 @@ sub del_service {
 app->on(
     'pull',
     sub {
-        my ($uri, $digest) = @_;
+        my ($self, $uri, $digest) = @_;
         my $dir = getcwd;
         chdir "$SERVICE_HOME/gits/$digest";
         installdeps() if -f 'Makefile.PL';
@@ -65,11 +65,11 @@ app->on(
 app->on(
     'clone',
     sub {
-        my ($uri, $digest) = @_;
+        my ($self, $uri, $digest) = @_;
         make_path("../logs/$digest");
         symlink '../master.ini', "../conf/$digest.ini";
         symlink "../gits/$digest/public", "../root/$digest";
-        emit('pull', $uri, $digest);
+        $self->emit('pull', $uri, $digest);
     }
 );
 
